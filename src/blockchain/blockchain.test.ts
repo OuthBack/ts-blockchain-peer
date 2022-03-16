@@ -1,4 +1,5 @@
 import { Block } from '@block';
+import { cryptoHash } from '@hash';
 
 import { Blockchain } from './blockchain';
 
@@ -54,6 +55,38 @@ describe('Blockchain', () => {
       describe('and the chain contains a block with an invalid field', () => {
         it('should returns false', () => {
           blockchain.chain[2].data = 'some-bad-and-evil-data';
+
+          expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
+        });
+      });
+
+      describe('and the chain contains a block with a jumped difficulty', () => {
+        it('should returns false', () => {
+          const lastBlock = blockchain.chain[blockchain.chain.length - 1];
+          const lastHash = lastBlock.hash;
+          const timestamp = Date.now();
+          const nounce = 0;
+          const data = '';
+          const difficulty = lastBlock.difficulty - 3;
+
+          const hash = cryptoHash(
+            timestamp,
+            lastHash,
+            difficulty,
+            nounce,
+            data
+          );
+
+          const badBlock = new Block({
+            timestamp,
+            lastHash,
+            hash,
+            nounce,
+            difficulty,
+            data,
+          });
+
+          blockchain.chain.push(badBlock);
 
           expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
         });

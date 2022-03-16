@@ -3,4 +3,6 @@ export interface BlockModel {
   hash: string;
   lastHash: string;
   data: string;
+  nounce: number;
+  difficulty: number;
 }

@@ -40,14 +40,25 @@ export class Blockchain implements BlockchainModel {
         return JSON.stringify(block) === JSON.stringify(Block.genesis());
       }
 
-      const { data, hash, lastHash, timestamp } = block;
-
+      const { data, hash, lastHash, timestamp, difficulty, nounce } = block;
       const actualLastHash = chain[i - 1].hash;
+      const lastDifficulty = chain[i - 1].difficulty;
+
       if (lastHash !== actualLastHash) {
         return false;
       }
 
-      const validatedHash = cryptoHash(timestamp, lastHash, data);
+      if (Math.abs(lastDifficulty - difficulty) > 1) {
+        return false;
+      }
+
+      const validatedHash = cryptoHash(
+        timestamp,
+        lastHash,
+        data,
+        nounce,
+        difficulty
+      );
 
       if (hash !== validatedHash) {
         return false;
