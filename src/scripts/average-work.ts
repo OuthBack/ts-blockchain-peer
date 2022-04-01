@@ -1,4 +1,4 @@
-import { Blockchain } from 'blockchain/blockchain';
+import { Blockchain } from 'domain/blockchain';
 
 const blockchain = new Blockchain();
 

@@ -1,4 +1,4 @@
-import { Block } from '@block';
+import { Block } from 'domain/block';
 
 export interface BlockchainModel {
   chain: Block[];

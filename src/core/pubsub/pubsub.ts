@@ -1,4 +1,4 @@
-import { Blockchain } from 'blockchain';
+import { Blockchain } from '@domain';
 import { createClient, RedisClientType } from 'redis';
 
 import { ChannelMessage, PubSubModel } from './pubsub.model';

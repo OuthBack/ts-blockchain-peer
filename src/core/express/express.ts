@@ -1,10 +1,9 @@
+import { Blockchain } from '@domain';
 import bodyParser from 'body-parser';
 import express from 'express';
 import request from 'request';
 
-import { Blockchain } from '../blockchain/blockchain';
-
-import { PubSub } from './pubsub';
+import { PubSub } from '../pubsub/pubsub';
 
 const app = express();
 const blockchain = new Blockchain();

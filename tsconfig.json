@@ -24,7 +24,10 @@
     "typeRoots": ["node_modules/@types", "src/types"],
     "paths": {
       "@block": ["./block"],
-      "@hash": ["./hash"]
+      "@hash": ["./hash"],
+      "@util": ["./util"],
+      "@domain": ["./domain"],
+      "@configs": ["./configs"]
     }
   },
   "exclude": [

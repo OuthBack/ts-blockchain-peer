@@ -1,5 +1,6 @@
-import { Block } from '@block';
-import { cryptoHash } from '@hash';
+import { cryptoHash } from '@util';
+
+import { Block } from '../block';
 
 import { Blockchain } from './blockchain';
 

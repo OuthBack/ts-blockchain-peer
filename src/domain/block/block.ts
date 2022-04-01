@@ -1,18 +1,8 @@
-import { cryptoHash } from '@hash';
+import { GENESIS_DATA, MINE_RATE } from '@configs';
+import { cryptoHash } from '@util';
 import hexToBinary from 'hex-to-binary';
 
 import { BlockModel } from './block.model';
-
-export const INITIAL_DIFFICULTY = 3;
-export const MINE_RATE = 1000;
-export const GENESIS_DATA: BlockModel = {
-  data: '',
-  hash: '01',
-  lastHash: '00',
-  timestamp: 1516,
-  difficulty: INITIAL_DIFFICULTY,
-  nounce: 0,
-};
 
 interface MineBlockArgs extends Pick<BlockModel, 'data'> {
   lastBlock: BlockModel;
