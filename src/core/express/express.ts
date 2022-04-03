@@ -1,5 +1,9 @@
-import { Blockchain } from '@domain';
+import { TransactionPool } from 'domain/wallet/transaction-pool';
+
+import { Blockchain } from '@domain/blockchain';
+import { Wallet } from '@domain/wallet';
 import bodyParser from 'body-parser';
+import { TransactionMiner } from 'core/miner';
 import express from 'express';
 import request from 'request';
 
@@ -7,15 +11,26 @@ import { PubSub } from '../pubsub/pubsub';
 
 const app = express();
 const blockchain = new Blockchain();
-const pubSub = new PubSub({ blockchain });
+const transactionPool = new TransactionPool();
+const wallet = new Wallet();
+const pubsub = new PubSub({ blockchain, transactionPool });
 (async () => {
-  await pubSub.connect();
+  await pubsub.connect();
 })();
+const transactionMiner = new TransactionMiner({
+  blockchain,
+  transactionPool,
+  wallet,
+  pubsub,
+});
 
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
-setTimeout(() => pubSub.broadcastChain(), 1000);
+setTimeout(() => {
+  pubsub.broadcastChain();
+  pubsub.subscribeTransaction();
+}, 1000);
 
 app.use(bodyParser.json());
 
@@ -28,12 +43,46 @@ app.post('/api/mine', async (req, res) => {
 
   blockchain.addBlock({ data });
 
-  await pubSub.broadcastChain();
+  await pubsub.broadcastChain();
 
   res.redirect('/api/blocks');
 });
 
-const syncChains = () => {
+app.post('/api/transact', async (req, res) => {
+  const { amount, recipient } = req.body;
+
+  let transaction = transactionPool.existingTransaction({
+    inputAddress: wallet.publicKey,
+  });
+
+  try {
+    if (transaction) {
+      transaction.update({ senderWallet: wallet, recipient, amount });
+    } else {
+      transaction = wallet.createTransaction({ recipient, amount });
+    }
+  } catch (error) {
+    return res.status(400).json({ type: 'error', message: error.message });
+  }
+
+  transactionPool.setTransaction(transaction);
+
+  await pubsub.broadcastTransaction(transaction);
+
+  return res.json({ type: 'success', transaction });
+});
+
+app.get('/api/transaction-pool-map', (_, res) => {
+  res.json(transactionPool.transactionMap);
+});
+
+app.get('/api/mine-transactions', (_, res) => {
+  transactionMiner.mineTransactions();
+
+  res.redirect('/api/blocks');
+});
+
+const syncWithRootState = () => {
   request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, res, body) => {
     if (!error && res.statusCode === 200) {
       const rootChain = JSON.parse(body);
@@ -42,6 +91,21 @@ const syncChains = () => {
       blockchain.replaceChain(rootChain);
     }
   });
+
+  request(
+    { url: `${ROOT_NODE_ADDRESS}/api/transaction-pool-map` },
+    (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        const rootTransactionPoolMap = JSON.parse(body);
+
+        console.log(
+          'replace transaction pool map on a sync with',
+          rootTransactionPoolMap
+        );
+        transactionPool.setMap(rootTransactionPoolMap);
+      }
+    }
+  );
 };
 
 let PEER_PORT: number;
@@ -55,6 +119,6 @@ app.listen(PORT, () => {
   console.log(`listening at localhost:${PORT}`);
 
   if (PORT !== DEFAULT_PORT) {
-    syncChains();
+    syncWithRootState();
   }
 });

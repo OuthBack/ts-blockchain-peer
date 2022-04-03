@@ -1,4 +1,5 @@
-import { cryptoHash } from '@util';
+import { Transaction } from '@domain/wallet';
+import { cryptoHash } from '@util/crypto-hash';
 
 import { Block } from '../block';
 
@@ -11,7 +12,7 @@ export class Blockchain implements BlockchainModel {
     this.chain = [Block.genesis()];
   }
 
-  addBlock({ data }: Pick<Block, 'data'>) {
+  addBlock({ data }: Pick<Block, 'data'> | { data: Transaction[] }) {
     const newBlock = Block.mineBlock({
       lastBlock: this.chain[this.chain.length - 1],
       data,
@@ -20,7 +21,7 @@ export class Blockchain implements BlockchainModel {
     this.chain.push(newBlock);
   }
 
-  replaceChain(chain: Block[]) {
+  replaceChain(chain: Block[], onSuccess?: (args?: unknown) => void) {
     if (chain.length <= this.chain.length) {
       console.error('The incoming chain must be longer');
       return;
@@ -31,6 +32,9 @@ export class Blockchain implements BlockchainModel {
       return;
     }
 
+    if (onSuccess) {
+      onSuccess();
+    }
     console.log('replacing chain with');
     this.chain = chain;
   }

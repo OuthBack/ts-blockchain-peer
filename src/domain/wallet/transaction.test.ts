@@ -1,4 +1,5 @@
-import { Signature, verifySignature } from '@util';
+import { MINING_REWARD, REWARD_INPUT } from '@configs';
+import { Signature, verifySignature } from '@util/elliptic';
 
 import { Transaction } from './transaction';
 import { Wallet } from './wallet';
@@ -178,6 +179,26 @@ describe('Transaction', () => {
           });
         });
       });
+    });
+  });
+
+  describe('rewardTransaction()', () => {
+    let rewardTransaction: Transaction;
+    let minerWallet: Wallet;
+
+    beforeEach(() => {
+      minerWallet = new Wallet();
+      rewardTransaction = Transaction.rewardTransaction({ minerWallet });
+    });
+
+    it('should creates a transaction with the reward input', () => {
+      expect(rewardTransaction.input).toEqual(REWARD_INPUT);
+    });
+
+    it('should creates ones transaction for the miner with the `MINING_REWARD`', () => {
+      expect(rewardTransaction.outputMap[minerWallet.publicKey]).toEqual(
+        MINING_REWARD
+      );
     });
   });
 });

@@ -1,5 +1,6 @@
 import { STARTING_BALANCE } from '@configs';
-import { cryptoHash, ec, KeyPair, Signature } from '@util';
+import { cryptoHash } from '@util/crypto-hash';
+import { ec, KeyPair, Signature } from '@util/elliptic';
 
 import { WalletModel } from './wallet.model';
 

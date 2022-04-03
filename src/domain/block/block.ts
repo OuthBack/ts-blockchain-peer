@@ -1,10 +1,12 @@
 import { GENESIS_DATA, MINE_RATE } from '@configs';
-import { cryptoHash } from '@util';
+import { Transaction } from '@domain/wallet';
+import { cryptoHash } from '@util/crypto-hash';
 import hexToBinary from 'hex-to-binary';
 
 import { BlockModel } from './block.model';
 
-interface MineBlockArgs extends Pick<BlockModel, 'data'> {
+interface MineBlockArgs {
+  data: string | Transaction[];
   lastBlock: BlockModel;
 }
 
@@ -15,7 +17,7 @@ export class Block implements BlockModel {
   timestamp: number;
   hash: string;
   lastHash: string;
-  data: string;
+  data: string | Transaction[];
   nounce: number;
   difficulty: number;
 
@@ -63,7 +65,7 @@ export class Block implements BlockModel {
     return new this({
       timestamp,
       lastHash,
-      data,
+      data: <string>data,
       difficulty,
       nounce,
       hash,

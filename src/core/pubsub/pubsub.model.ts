@@ -1,4 +1,4 @@
-import { Blockchain } from '@domain';
+import { Blockchain } from '@domain/blockchain';
 import { RedisClientType } from 'redis';
 
 export interface ChannelMessage {

@@ -1,4 +1,4 @@
-import { cryptoHash } from '@util';
+import { cryptoHash } from '@util/crypto-hash';
 
 import { Block } from '../block';
 

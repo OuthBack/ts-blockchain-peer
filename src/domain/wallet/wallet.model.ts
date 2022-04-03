@@ -1,4 +1,4 @@
-import { KeyPair, Signature } from '@util';
+import { KeyPair, Signature } from '@util/elliptic';
 
 export interface WalletModel {
   keyPair: KeyPair;

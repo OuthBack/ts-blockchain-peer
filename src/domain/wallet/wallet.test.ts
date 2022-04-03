@@ -1,4 +1,4 @@
-import { verifySignature } from '@util';
+import { verifySignature } from '@util/elliptic';
 
 import { Wallet } from './wallet';
 
