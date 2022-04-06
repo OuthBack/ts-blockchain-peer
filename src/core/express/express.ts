@@ -4,6 +4,7 @@ import { Blockchain } from '@domain/blockchain';
 import { Wallet } from '@domain/wallet';
 import bodyParser from 'body-parser';
 import { TransactionMiner } from 'core/miner';
+import cors from 'cors';
 import express from 'express';
 import request from 'request';
 
@@ -32,10 +33,31 @@ setTimeout(() => {
   pubsub.subscribeTransaction();
 }, 1000);
 
+app.use(cors());
+
 app.use(bodyParser.json());
 
 app.get('/api/blocks', (_req, res) => {
   res.json(blockchain.chain);
+});
+
+app.get<{ paginatedId: number }>('/api/blocks/:paginatedId', (req, res) => {
+  const { paginatedId } = req.params;
+  const { length } = blockchain.chain;
+
+  const blocksReversed = blockchain.chain.slice().reverse();
+
+  let startIndex = (paginatedId - 1) * 5;
+  let endIndex = paginatedId * 5;
+
+  startIndex = startIndex < length ? startIndex : length;
+  endIndex = endIndex < length ? endIndex : length;
+
+  res.json(blocksReversed.slice(startIndex, endIndex));
+});
+
+app.get('/api/blocks/length', (_req, res) => {
+  res.json(blockchain.chain.length);
 });
 
 app.post('/api/mine', async (req, res) => {
@@ -50,6 +72,18 @@ app.post('/api/mine', async (req, res) => {
 
 app.get('/api/wallet-info', (_, res) => {
   const address = wallet.publicKey;
+
+  res.json({
+    address,
+    balance: Wallet.calculateBalance({
+      chain: blockchain.chain,
+      address,
+    }),
+  });
+});
+
+app.get<{ address: string }>('/api/wallet-info/:address', (req, res) => {
+  const { address } = req.params;
 
   res.json({
     address,

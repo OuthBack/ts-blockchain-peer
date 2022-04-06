@@ -3,7 +3,9 @@ import { Transaction, TransactionPool, Wallet } from '@domain/wallet';
 
 import { PubSub } from '../pubsub';
 
-export class TransactionMiner {
+import { TransactionMinerModel } from './transaction-miner.model';
+
+export class TransactionMiner implements TransactionMinerModel {
   blockchain: Blockchain;
   transactionPool: TransactionPool;
   wallet: Wallet;
