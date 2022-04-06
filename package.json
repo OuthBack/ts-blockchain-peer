@@ -21,7 +21,7 @@
     "dev": "yarn start-redis && cross-env ENV='development' tsc-watch --onSuccess \"node -r ./tsconfig-paths-dist.js build/main/index.js --inspect\" ",
     "dev-work": "start-redis && cross-env ENV='development' tsc-watch --onSuccess \"node -r ./tsconfig-paths-dist.js build/main/work/index.js --inspect\" ",
     "dev-peer": "cross-env ENV='development' GENERATE_PEER_PORT='true' tsc-watch --onSuccess \"node -r ./tsconfig-paths-dist.js build/main/index.js --inspect\"",
-    "start": "yarn tsc && node -r ./tsconfig-paths-dist.js build/main/index.js",
+    "start": "node -r ts-node/register -r tsconfig-paths/register build/main/index.js",
     "start-redis": "redis-server --daemonize yes"
   },
   "engines": {
