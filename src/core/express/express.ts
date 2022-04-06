@@ -1,7 +1,7 @@
 import { TransactionPool } from 'domain/wallet/transaction-pool';
 
 import { Blockchain } from '@domain/blockchain';
-import { Wallet } from '@domain/wallet';
+import { Transaction, Wallet } from '@domain/wallet';
 import bodyParser from 'body-parser';
 import { TransactionMiner } from 'core/miner';
 import cors from 'cors';
@@ -97,6 +97,21 @@ app.get<{ address: string }>('/api/wallet-info/:address', (req, res) => {
       address,
     }),
   });
+});
+
+app.get('/api/known-addresses', (_, res) => {
+  const addressMap = {};
+
+  for (const block of blockchain.chain) {
+    for (const transactionData of block.data) {
+      const transaction = <Transaction>transactionData;
+      const recipient = Object.keys(transaction.outputMap);
+
+      recipient.forEach((recipient) => (addressMap[recipient] = recipient));
+    }
+  }
+
+  res.json(Object.keys(addressMap));
 });
 
 app.post('/api/transact', async (req, res) => {
