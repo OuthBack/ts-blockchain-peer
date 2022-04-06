@@ -5,6 +5,7 @@ import { createClient, RedisClientType } from 'redis';
 import { ChannelMessage, PubSubModel } from './pubsub.model';
 
 interface PubSubParameters {
+  redisUrl: string;
   blockchain: Blockchain;
   transactionPool: TransactionPool;
 }
@@ -21,12 +22,12 @@ export class PubSub implements PubSubModel {
   blockchain: Blockchain;
   transactionPool: TransactionPool;
 
-  constructor({ blockchain, transactionPool }: PubSubParameters) {
+  constructor({ blockchain, transactionPool, redisUrl }: PubSubParameters) {
     // Needs to connect before make publishes
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
 
-    const client: RedisClientType = createClient();
+    const client: RedisClientType = createClient({ url: redisUrl });
     this.publisher = client.duplicate();
     this.subscriber = client.duplicate();
   }

@@ -10,11 +10,19 @@ import request from 'request';
 
 import { PubSub } from '../pubsub/pubsub';
 
+const isDevelopment = process.env.ENV === 'development';
+
+const REDIS_URL = isDevelopment
+  ? 'redis://127.0.0.1:6379'
+  : 'redis://:p236bff2faf05a747426644c1f7ad85d4abff08a61b1d1131bb03f15490747088@ec2-18-205-76-248.compute-1.amazonaws.com:9319';
+const DEFAULT_PORT = 3000;
+const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
+
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
-const pubsub = new PubSub({ blockchain, transactionPool });
+const pubsub = new PubSub({ blockchain, transactionPool, redisUrl: REDIS_URL });
 (async () => {
   await pubsub.connect();
 })();
@@ -24,9 +32,6 @@ const transactionMiner = new TransactionMiner({
   wallet,
   pubsub,
 });
-
-const DEFAULT_PORT = 3000;
-const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
 setTimeout(() => {
   pubsub.broadcastChain();
@@ -164,7 +169,7 @@ if (process.env.GENERATE_PEER_PORT === 'true') {
   PEER_PORT = DEFAULT_PORT + 1 - 1000 + Math.ceil(Math.random() * 1000);
 }
 
-const PORT = PEER_PORT || DEFAULT_PORT;
+const PORT = process.env.PORT || PEER_PORT || DEFAULT_PORT;
 app.listen(PORT, () => {
   console.log(`listening at localhost:${PORT}`);
 
