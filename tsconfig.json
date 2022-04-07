@@ -35,5 +35,8 @@
     "jest.config.js",
     "build"
   ],
-  "compileOnSave": false
+  "compileOnSave": false,
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }
