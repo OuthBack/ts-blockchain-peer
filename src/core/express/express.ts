@@ -16,7 +16,7 @@ const REDIS_URL = isDevelopment
   ? 'redis://127.0.0.1:6379'
   : 'redis://:p236bff2faf05a747426644c1f7ad85d4abff08a61b1d1131bb03f15490747088@ec2-18-205-76-248.compute-1.amazonaws.com:9319';
 const DEFAULT_PORT = 3000;
-const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
+const ROOT_NODE_ADDRESS = isDevelopment ? `http://localhost:${DEFAULT_PORT}` : 'https://rocky-island-65028.herokuapp.com'
 
 const app = express();
 const blockchain = new Blockchain();
