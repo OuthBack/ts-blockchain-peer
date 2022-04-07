@@ -2,9 +2,9 @@ import { STARTING_BALANCE } from '@configs';
 import { cryptoHash } from '@util/crypto-hash';
 import { ec, KeyPair, Signature } from '@util/elliptic';
 
+import { Transaction } from './transaction';
+import { CalculateBalanceArgs, CreateTransactionArgs } from './wallet.model';
 import { WalletModel } from './wallet.model';
-
-import { CalculateBalanceArgs, CreateTransactionArgs, Transaction } from '.';
 
 export class Wallet implements WalletModel {
   keyPair: KeyPair;
