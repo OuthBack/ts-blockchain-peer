@@ -36,7 +36,4 @@
     "build"
   ],
   "compileOnSave": false,
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
 }
