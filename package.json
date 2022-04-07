@@ -18,10 +18,10 @@
     "test:spelling": "cspell \"{README.md,.github/*.md,src/**/*.ts}\"",
     "test:unit": "nyc --silent ava",
     "cov:check": "nyc report && nyc check-coverage --lines 100 --functions 100 --branches 100",
-    "dev": "yarn start-redis && cross-env ENV='development' ts-node-dev -r tsconfig-paths/register src/core/express --inspect",
-    "dev-work": "start-redis && cross-env ENV='development' ts-node-dev -r tsconfig-paths/register src/core/express --inspect",
+    "dev": "yarn start-redis && cross-env ENV='development' ts-node-dev src/core/express --inspect",
+    "dev-work": "start-redis && cross-env ENV='development' ts-node-dev src/core/express --inspect",
     "dev-peer": "cross-env ENV='development' GENERATE_PEER_PORT='true' tsc-watch --onSuccess \"node -r ./tsconfig-paths-dist.js build/main/index.js --inspect\"",
-    "start": "yarn ts-node -r tsconfig-paths/register src/core/express",
+    "start": "yarn ts-node src/core/express",
     "start-redis": "redis-server --daemonize yes"
   },
   "engines": {
