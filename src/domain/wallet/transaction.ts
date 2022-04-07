@@ -3,13 +3,12 @@ import { verifySignature } from '@util/elliptic';
 import { v1 as uuid } from 'uuid';
 
 import { OutputMapModel } from './transaction.model';
-
 import {
   CreateInputArgs,
   TransactionArgs,
   TransactionInput,
   TransactionModel,
-} from '.';
+} from './transaction.model';
 
 type CreateTransactionArgs = Omit<TransactionArgs, 'outputMap' | 'input'>;
 

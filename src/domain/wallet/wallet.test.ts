@@ -2,9 +2,8 @@ import { STARTING_BALANCE } from '@configs';
 import { Blockchain } from '@domain/blockchain';
 import { verifySignature } from '@util/elliptic';
 
+import { Transaction } from './transaction';
 import { Wallet } from './wallet';
-
-import { Transaction } from '.';
 
 describe('Wallet', () => {
   let wallet: Wallet;

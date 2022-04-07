@@ -1,8 +1,8 @@
 import { Blockchain } from '@domain/blockchain';
 
+import { Transaction } from './transaction';
 import { TransactionPool } from './transaction-pool';
-
-import { Transaction, Wallet } from '.';
+import { Wallet } from './wallet';
 
 describe('TransactionPool', () => {
   let transactionPool: TransactionPool;

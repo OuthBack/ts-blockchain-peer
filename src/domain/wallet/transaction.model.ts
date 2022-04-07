@@ -1,6 +1,6 @@
 import { Signature } from '@util/elliptic';
 
-import { Wallet } from '.';
+import { Wallet } from './wallet';
 
 export interface CreateInputArgs {
   senderWallet: Wallet;

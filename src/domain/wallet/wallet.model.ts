@@ -1,7 +1,7 @@
 import { Blockchain } from '@domain/blockchain';
 import { KeyPair, Signature } from '@util/elliptic';
 
-import { Transaction } from '.';
+import { Transaction } from './transaction';
 
 export interface CreateTransactionArgs
   extends Partial<Pick<Blockchain, 'chain'>> {

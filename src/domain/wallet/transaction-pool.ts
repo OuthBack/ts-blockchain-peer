@@ -1,10 +1,10 @@
 import { Blockchain } from '@domain/blockchain';
 
+import { Transaction } from './transaction';
 import { TransactionMap, TransactionPoolModel } from './transaction-pool.model';
 
-import { Transaction } from '.';
-
 export class TransactionPool implements TransactionPoolModel {
+  id: string;
   transactionMap: TransactionMap;
 
   constructor() {
